@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { data, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
 const BASE_URL = import.meta.env.VITE_AUTH_BASE_URL
 
 // Create the Auth Context
@@ -26,10 +28,11 @@ export const AuthProvider = ({ children }) => {
                 body: JSON.stringify(credentials),
                 credentials: 'include', // Include cookies
             });
+
+            const data = await response.json();
+
             if (response.ok) {
-                const data = await response.json();
                 const { expires_in } = data;
-                
                 const expirationTime = expires_in + Math.floor(Date.now() / 1000);
                 console.log("time login", expirationTime)
 
@@ -39,11 +42,10 @@ export const AuthProvider = ({ children }) => {
 
                 navigate('/resume'); // Redirect to resume page
             } else {
-                console.log(response.message)
+                toast.error(data.error);
             }
-        }
-        catch (error) {
-            console.error('Authentication error:', error);
+        }catch (error) {
+            console.log('Authentication error:', error);
         }
     };
 
@@ -63,7 +65,7 @@ export const AuthProvider = ({ children }) => {
             }
         }
         catch (error) {
-            console.error('Authentication error:', error);
+            console.log('Authentication error:', error);
         }
     };
 
@@ -75,16 +77,24 @@ export const AuthProvider = ({ children }) => {
             body: JSON.stringify(userData),
             credentials: 'include',
         });
+
         const data = await response.json();
-        if (!response.ok) {
-            throw new Error(data.message);
+
+        if (!data.ok) {
+            for (const [key, value] of Object.entries(data.error)) {
+                toast.error(`${value}`);
+            }
+        }
+        else{
+            navigate("/login")
+            toast.success(data.detail)
         }
         return data;
     };
 
     // Password reset function
     const passwordReset = async (email) => {
-        const response = await fetch(`${BASE_URL}password-reset/`, {
+        const response = await fetch(`${BASE_URL}password/reset/`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email }),
@@ -98,16 +108,35 @@ export const AuthProvider = ({ children }) => {
 
     // Password confirm reset function
     const passwordConfirmReset = async (data) => {
-        const response = await fetch(`${BASE_URL}password-confirm-reset/`, {
+        const response = await fetch(`${BASE_URL}password/confirm/reset/`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),
             credentials: 'include',
         });
+
         if (!response.ok) {
             const errorData = await response.json();
             throw new Error(errorData.message);
         }
+    };
+
+    // Password confirm reset function
+    const getProfile = async () => {
+        const response = await fetch(`${BASE_URL}user/`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message);
+        }
+        const data = await response.json();
+
+        setUser(data)
+        return user;
     };
 
     const get_authenticated = async () => {
@@ -160,42 +189,9 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    // useEffect(() => {
-    //     get_authenticated();
-        
-    //     const refreshInterval = setInterval(() => {
-    //         if (isAuthenticated && accessTokenExpireTime) {
-    //             const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
-    //             const timeRemaining = accessTokenExpireTime - currentTime;
-
-    //             if (timeRemaining < 30) { // Refresh token if less than 30 seconds remaining
-    //                 refreshAccessToken();
-    //             }
-    //         }
-    //     }, 1000); // Check every second
-
-    //     return () => clearInterval(refreshInterval);
-    // }, [isAuthenticated, accessTokenExpireTime]);
-
-
     useEffect(() => {
-        const get_authenticated = async () => {
-            try {
-                const response = await fetch(`${BASE_URL}authenticated/`, {
-                    method: 'POST',
-                    credentials: 'include',
-                });
-                if (response.ok) setIsAuthenticated(true);
-            } catch (error) {
-                console.error(error);
-                setIsAuthenticated(false);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         get_authenticated();
-
+        getProfile();
         const setRefreshTimer = () => {
             if (isAuthenticated && accessTokenExpireTime) {
                 const currentTime = Math.floor(Date.now() / 1000);
@@ -227,7 +223,8 @@ export const AuthProvider = ({ children }) => {
             logout, 
             register, 
             passwordReset, 
-            passwordConfirmReset, 
+            passwordConfirmReset,
+            getProfile, 
             loading, 
             accessTokenExpireTime
             }}>
