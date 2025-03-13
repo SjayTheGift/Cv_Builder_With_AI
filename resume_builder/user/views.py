@@ -56,13 +56,19 @@ class UserRegistrationAPIView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+
+        if not serializer.is_valid():
+            errors = serializer.errors
+            return Response({"detail": "Registration failed", "errors": errors}, status=status.HTTP_400_BAD_REQUEST)
+
         user = serializer.save()
         return Response({"detail": "User registered successfully"}, status=status.HTTP_201_CREATED)
 
 class CustomTokenObtainPairView(TokenObtainPairView):
+
     def post(self, request, *args, **kwargs):
         try:
+            # Call the parent post method to get tokens
             response = super().post(request, *args, **kwargs)
             token = response.data
             
@@ -98,7 +104,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
             return res
 
         except Exception as e:
-            return Response({"detail": "Login failed", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": "Login failed", "error": 'Invalid email or password. Please try again.'}, status=status.HTTP_400_BAD_REQUEST)
 
 class CustomRefreshToken(TokenRefreshView):
     def post(self, request, *args, **kwargs):
@@ -127,7 +133,7 @@ class CustomRefreshToken(TokenRefreshView):
                     samesite='None',  # or 'Lax' if needed in production 'Strict'
                     path='/',
                 )
-                
+
                 # Get expiration time
                 access_token_obj = AccessToken(access_token)
                 expiration_time = access_token_obj['exp']  # Get expiration timestamp

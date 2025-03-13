@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Button } from "@/components/ui/button";
+import { toast } from 'react-toastify';
 import {
   Card,
   CardContent,
@@ -12,25 +13,21 @@ import { Label } from "@/components/ui/label";
 import { Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 
-const LoginPage = () => {
+const PasswordRestPage = () => {
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const { login } = useAuth();
 
+    const { passwordReset } = useAuth();
 
     const handleSubmit = async (e) =>{
-        e.preventDefault();
+      e.preventDefault();
 
-        if(email.trim() !== '' &&  password.trim() !== ''){
-            let credentials = {
-                email,
-                password
-            }
-            
-            await login(credentials)
-        }
+      if(email.trim() !== ''){
 
-    }
+          await passwordReset(email)
+          toast.success(`Email has been sent to ${email}`)
+          setEmail('')
+      }
+  }
 
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
@@ -38,10 +35,10 @@ const LoginPage = () => {
         <div className="flex flex-col gap-6">
             <Card>
                 <CardHeader>
-                <CardTitle className="text-2xl">Login</CardTitle>
-                <CardDescription>
-                    Enter your email below to login to your account
-                </CardDescription>
+                    <CardTitle className="text-2xl text-center">Password Rest</CardTitle>
+                    <CardDescription>
+                        Enter your email below to rest password for your account
+                    </CardDescription>
                 </CardHeader>
                 <CardContent>
                 <form onSubmit={handleSubmit}>
@@ -57,31 +54,13 @@ const LoginPage = () => {
                         onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
-                    <div className="grid gap-2">
-                        <div className="flex items-center">
-                        <Label htmlFor="password">Password</Label>
-                        <Link to="/password-rest"
-                            className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                        >
-                            Forgot your password?
-                        </Link>
-                        </div>
-                        <Input 
-                            id="password" 
-                            type="password" 
-                            required 
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                    </div>
                     <Button type="submit" className="w-full cursor-pointer">
-                        Login
+                        Rest Password
                     </Button>
                     </div>
                     <div className="mt-4 text-center text-sm">
-                    Don&apos;t have an account?{" "}
-                    <Link to="/register" className="underline underline-offset-4">
-                        Sign up
+                    <Link to="/login" className="underline underline-offset-4">
+                        Go Back
                     </Link>
                     </div>
                 </form>
@@ -93,4 +72,4 @@ const LoginPage = () => {
   )
 }
 
-export default LoginPage
+export default PasswordRestPage
