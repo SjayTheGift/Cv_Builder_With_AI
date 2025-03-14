@@ -9,9 +9,10 @@ import PasswordRestPage from './pages/PasswordRestPage';
 import PasswordConfirmPage from './pages/PasswordConfirmPage';
 import ProfilePage from './pages/ProfilePage';
 import NotFoundPage from './pages/NotFoundPage';
-import Resume from './pages/Resume';
+import Dashboard from './pages/Dashboard';
 import Layout from './components/Layout'; // Import your Layout component
 import ProtectedRoute from './utils/ProtectedRoute'
+import Resume from './pages/Resume';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
               <Route index element={<ProtectedRoute><HomePage /></ProtectedRoute>} /> 
+              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>}/>
               <Route path="/resume" element={<ProtectedRoute><Resume /></ProtectedRoute>}/>
               <Route path="/update-profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>}/>
           </Route>

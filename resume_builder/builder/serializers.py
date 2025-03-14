@@ -19,7 +19,7 @@ class ResumeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Resume
-        fields = ['id', 'user', 'name', 'email', 'phone', 'summary', 'experiences', 'educations']
+        fields = ['id', 'user', 'title', 'name', 'email', 'phone', 'summary', 'experiences', 'educations']
         read_only_fields = ['user']  # Mark user as read-only
 
     def create(self, validated_data):

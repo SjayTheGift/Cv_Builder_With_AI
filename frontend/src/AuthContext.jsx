@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
                 localStorage.setItem('accessTokenExpireTime', expirationTime);
                 setIsAuthenticated(true);
 
-                navigate('/resume'); // Redirect to resume page
+                navigate('/dashboard'); // Redirect to resume page
             } else {
                 toast.error(data.error);
             }
@@ -121,7 +121,7 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    // Password confirm reset function
+    // Get User Profile
     const getProfile = async () => {
         const response = await fetch(`${BASE_URL}user/`, {
             method: 'GET',
@@ -137,6 +137,31 @@ export const AuthProvider = ({ children }) => {
 
         setUser(data)
         return user;
+    };
+
+    // Get Update User Profile
+    const updateProfile = async (email) => {
+        if (user?.email === email) {
+            toast.error("Please enter a different email.");
+            return; // Exit if the email is the same as the existing one
+        }
+    
+        const response = await fetch(`${BASE_URL}user/`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email }),
+            credentials: 'include',
+        });
+    
+        const data = await response.json();
+    
+        if (!response.ok) {
+            toast.error(`${data.error.email}`);
+        } else {
+            toast.success(`Successfully updated email to - ${data.email}`);
+            setUser(data); // Update the user state with new information
+        }
+        return data;
     };
 
     const get_authenticated = async () => {
@@ -189,29 +214,7 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    useEffect(() => {
-        get_authenticated();
-        getProfile();
-        const setRefreshTimer = () => {
-            if (isAuthenticated && accessTokenExpireTime) {
-                const currentTime = Math.floor(Date.now() / 1000);
-                const timeRemaining = accessTokenExpireTime - currentTime;
-
-                // Set an interval to refresh the token 30 seconds before it expires
-                if (timeRemaining > 30) {
-                    const refreshTimeout = setTimeout(refreshAccessToken, (timeRemaining - 30) * 1000);
-                    return refreshTimeout; // Return the timeout ID for cleanup
-                }
-            }
-            return null; // No timeout needed
-        };
-
-        const refreshInterval = setRefreshTimer();
-
-        return () => {
-            if (refreshInterval) clearTimeout(refreshInterval);
-        };
-    }, [isAuthenticated, accessTokenExpireTime]);
+    
 
     return (
         <AuthContext.Provider value={{ 
@@ -224,9 +227,12 @@ export const AuthProvider = ({ children }) => {
             register, 
             passwordReset, 
             passwordConfirmReset,
-            getProfile, 
+            getProfile,
+            get_authenticated, 
             loading, 
-            accessTokenExpireTime
+            accessTokenExpireTime,
+            setAccessTokenExpireTime,
+            updateProfile
             }}>
 
             {children}
