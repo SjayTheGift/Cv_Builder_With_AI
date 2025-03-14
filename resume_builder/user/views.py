@@ -46,7 +46,9 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
     def put(self, request, *args, **kwargs):
         user = self.get_object()
         serializer = self.get_serializer(user, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
+        if not serializer.is_valid():
+            error = serializer.errors
+            return Response({"error": error}, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 

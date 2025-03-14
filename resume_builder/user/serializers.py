@@ -9,6 +9,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'email')  
+    
+    def validate_email(self, value):
+        """Check if the email is already registered."""
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("A user with this email already exists.")
+        return value
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -22,6 +28,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         """Check if the email is already registered."""
         if User.objects.filter(email=value).exists():
             raise serializers.ValidationError("A user with this email already exists.")
+        if len(value) < 8:
+            raise serializers.ValidationError("Email must be at least 8 characters long.")
         return value
 
     def validate_password(self, value):

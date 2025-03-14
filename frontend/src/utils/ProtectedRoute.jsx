@@ -5,25 +5,31 @@ import { useAuth } from '../AuthContext'; // Adjust the import path as necessary
 
 const ProtectedRoute = ({ children }) => {
 
-  const {  get_authenticated, accessTokenExpiration, isAuthenticated, loading, setIsAuthenticated, refreshAccessToken } = useAuth();
+  const {  get_authenticated, getProfile, accessTokenExpireTime, isAuthenticated, loading, setAccessTokenExpireTime, refreshAccessToken } = useAuth();
 
-  // useEffect(() => {
-  //   auth().catch(() => setIsAuthenticated(false))
-  //   get_authenticated();
-  // }, [])
+  useEffect(() => {
+    get_authenticated();
+    getProfile();
+    const setRefreshTimer = () => {
+        if (isAuthenticated && accessTokenExpireTime) {
+            const currentTime = Math.floor(Date.now() / 1000);
+            const timeRemaining = accessTokenExpireTime - currentTime;
 
- 
+            // Set an interval to refresh the token 30 seconds before it expires
+            if (timeRemaining > 30) {
+                const refreshTimeout = setTimeout(refreshAccessToken, (timeRemaining - 30) * 1000);
+                return refreshTimeout; // Return the timeout ID for cleanup
+            }
+        }
+        return null; // No timeout needed
+    };
 
-  // const auth = async () => {
-  //   const now = Date.now() / 1000;
+    const refreshInterval = setRefreshTimer();
 
-  //     if (accessTokenExpiration < now) {
-  //         await refreshAccessToken();
-  //     } else {
-  //       setIsAuthenticated(true);
-  //     }
-  // };
-
+    return () => {
+        if (refreshInterval) clearTimeout(refreshInterval);
+    };
+}, [isAuthenticated, accessTokenExpireTime]);
 
   if(loading){
     return <div>Loading...</div>
