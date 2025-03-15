@@ -1,12 +1,21 @@
-import React from 'react'
+import { useEffect, useState } from 'react'
+import FormSection from '../components/FormSection'
+import ResumePreview from '../components/ResumePreview'
+import { ResumeInfoProvider } from '../ResumeInfoContext'
 
 const Resume = () => {
+
   return (
-    <section id='resume' className='w-full bg-gray-100 md:h-screen p-3 py-16 text-black'>
-      <div className="w-[80%] mx-auto px-10 py-4">
-        <h1 className='text-3xl py-2 font-bold'>Resume</h1>
-      </div>
+    <ResumeInfoProvider>
+        <section id='resume' className='w-full h-screen p-3 py-16 text-black'>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-10'>
+                {/* Form Section */}
+                    <FormSection />
+                {/* Preview Section */}
+                    <ResumePreview />
+            </div>
     </section>
+    </ResumeInfoProvider>
   )
 }
 
