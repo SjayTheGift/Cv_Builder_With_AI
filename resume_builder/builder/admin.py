@@ -11,8 +11,8 @@ class EducationInline(admin.TabularInline):
 
 @admin.register(Resume)
 class ResumeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'phone')  # Fields to display in the list view
-    search_fields = ('name', 'email')  # Fields to search in the admin interface
+    list_display = ('firstname', 'lastname', 'email', 'phone')  # Fields to display in the list view
+    search_fields = ('firstname', 'lastname', 'email')  # Fields to search in the admin interface
     inlines = [ExperienceInline, EducationInline]  # Add inlines for experiences and education
 
 @admin.register(Experience)
