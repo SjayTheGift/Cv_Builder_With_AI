@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 const ExperienceForm = ({ resumeInfo, setResumeInfo }) => {
-  const [experiences, setExperiences] = useState([{ job_title: '', company: '', start_date: '', end_date: '', summary: '' }]);
+  const [experiences, setExperiences] = useState(resumeInfo?.experience);
 
   const handleInputChange = (index, e) => {
     const { name, value } = e.target;
