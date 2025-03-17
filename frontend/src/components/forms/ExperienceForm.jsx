@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,20 +10,28 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from 'react-toastify';
 
-const ExperienceForm = ({ resumeInfo, setResumeInfo }) => {
-  const [experiences, setExperiences] = useState([{ job_title: '', company: '', start_date: '', end_date: '', summary: '' }]);
+const ExperienceForm = ({ resumeInfo, setResumeInfo, updateResume }) => {
+  const [experiences, setExperiences] = useState([{ job_title: '', company: '', start_date: '', end_date: '', description: '' }]);
+
+  useEffect(() => {
+    setResumeInfo((prevResumeInfo) => ({
+      ...prevResumeInfo,
+      experience: experiences,
+    }));
+  }, [experiences, setResumeInfo, resumeInfo.experiences]);
 
   const handleInputChange = (index, e) => {
     const { name, value } = e.target;
-    const newExperiences = experiences.map((experience, i) => 
+    const newExperiences = experiences.map((experience, i) =>
       i === index ? { ...experience, [name]: value } : experience
     );
     setExperiences(newExperiences);
   };
 
   const handleAddExperience = () => {
-    setExperiences([...experiences, { job_title: '', company: '', start_date: '', end_date: '', summary: '' }]);
+    setExperiences([...experiences, { job_title: '', company: '', start_date: '', end_date: '', description: '' }]);
   };
 
   const handleRemoveExperience = (index) => {
@@ -32,9 +40,24 @@ const ExperienceForm = ({ resumeInfo, setResumeInfo }) => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    // Handle form submission logic here, e.g., updating resumeInfo
-    setResumeInfo({ ...resumeInfo, experiences });
+      e.preventDefault();
+
+      // Build the resume object to send
+      const resume = { 
+          ...resumeInfo, 
+          experiences: experiences.map(exp => ({
+              ...exp,
+              end_date: exp.end_date || null // Set to null if empty
+          }))
+      };
+
+      try {
+          await updateResume(resume);
+          toast.success("Resume updated successfully!");
+      } catch (error) {
+          console.error("Failed to update resume:", error.message);
+          toast.error("Failed to update resume: " + error.message);
+      }
   };
 
   return (
@@ -94,14 +117,14 @@ const ExperienceForm = ({ resumeInfo, setResumeInfo }) => {
                   />
                 </div>
                 <div className='col-span-2'>
-                  <Label htmlFor={`summary_${index}`} className="my-2">Professional Summary *</Label>
+                  <Label htmlFor={`description_${index}`} className="my-2">Professional Summary *</Label>
                   <Textarea
                     minLength={6}
                     maxLength={300}
-                    id={`summary_${index}`}
+                    id={`description_${index}`}
                     placeholder="Tell us a little bit about yourself."
-                    name="summary"
-                    value={experience.summary}
+                    name="description"
+                    value={experience.description}
                     onChange={(e) => handleInputChange(index, e)}
                     style={{ resize: 'none', width: '100%', height: '8rem' }}
                   />

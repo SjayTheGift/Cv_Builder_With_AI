@@ -15,11 +15,14 @@ const SkillsPreview = ({resumeInfo}) => {
               borderColor:resumeInfo?.themeColor
         }}/>
         <div className='my-5 flex flex-wrap gap-3'>
-          {resumeInfo?.skills?.map((skill, index)=>
+          {resumeInfo.skills &&
+          
+          resumeInfo?.skills?.map((skill, index)=>
             <p className='text-xs p-2 rounded-md' style={{backgroundColor:resumeInfo?.themeColor}} key={index}>
               {skill.name}
             </p>
-          )}
+          )
+          }
         </div>
     </div>
   )

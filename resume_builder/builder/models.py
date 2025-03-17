@@ -18,7 +18,7 @@ class Resume(models.Model):
     themeColor = models.CharField(max_length=200, default="#ff6666")
 
     def __str__(self):
-        return self.name
+        return f'{self.firstname} - {self.lastname}'
 
 class Experience(models.Model):
     resume = models.ForeignKey(Resume, related_name='experiences', on_delete=models.CASCADE)
