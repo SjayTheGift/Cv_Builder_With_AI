@@ -17,9 +17,12 @@ const EducationPreview  = ({resumeInfo}) => {
             borderColor:resumeInfo?.themeColor
         }}/>
 
-      {resumeInfo?.education.map((education, index) => 
-        <Educations key={education.id} education={education}/>
-      )}
+        {resumeInfo.education &&
+            
+            resumeInfo?.education.map((education, index) => 
+              <Educations key={education.id} education={education}/>
+            )
+        }
      
     </div>
   )

@@ -5,11 +5,12 @@ const Experiences  = ({experience}) => {
     <div className='my-1'>
       <h3 className='text-xl font-bold text-gray-800'>{experience?.job_title}</h3>
       <h2 className='font-medium text-gray-600 flex justify-between'>
-        {experience?.company},
-        {experience?.city},
-        {experience?.state}
+        {experience?.company}
 
-        <span>{experience?.start_date} - {experience?.end_date ? experience?.end_date : 'present'}</span>
+        {experience && 
+         <span>{experience?.start_date} - {experience?.end_date ? experience?.end_date: "present"}</span>
+        }
+        
         </h2>
           <ul className="list-disc list-inside mt-2 text-gray-700">
             <li>Worked closely with other developers, UX designers, and big data analysts to create cohesive finished products.</li>

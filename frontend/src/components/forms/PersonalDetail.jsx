@@ -12,13 +12,25 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea"
 
-const PersonalDetail = ({ resumeInfo, setResumeInfo, setIsDisabled }) => {
+const PersonalDetail = ({ resumeInfo, setResumeInfo, setIsDisabled, createResume }) => {
+
+
+  const {
+    firstname,
+    lastname,
+    job_title,
+    address,
+    phone,
+    email,
+    website,
+    linkedin,
+    github,
+    summary
+} = resumeInfo
 
   const handleInputChange = (e) =>{
-    setIsDisabled(false);
+    // setIsDisabled(false);
     const { name, value } = e.target;
-
-    console.log(value, name)
 
     setResumeInfo({
       ...resumeInfo,
@@ -26,20 +38,29 @@ const PersonalDetail = ({ resumeInfo, setResumeInfo, setIsDisabled }) => {
     })
   }
 
-  console.log(resumeInfo)
-
   const handleSubmit = async (e) =>{
     e.preventDefault();
 
-    // if(email.trim() !== '' &&  password.trim() !== ''){
-    //     let credentials = {
-    //         email,
-    //         password
-    //     }
+    if(firstname.trim() !== '' &&  lastname.trim() !== '' && job_title.trim() !== '' 
+    &&  address.trim() !== '' && phone.trim() !== '' &&  email.trim() !== '' && website.trim() !== '' 
+    &&  linkedin.trim() !== '' && github.trim() !== '' && summary.trim() !== '' 
+  ){
+        let resume = {
+          firstname,
+          lastname,
+          job_title,
+          address,
+          phone,
+          email,
+          website,
+          linkedin,
+          github,
+          summary
+        }
         
-    //     await login(credentials)
-    // }
-    setIsDisabled(true);
+        await createResume(resume)
+    }
+    // setIsDisabled(true);
 
 }
 

@@ -7,7 +7,7 @@ import ExperienceForm from './forms/ExperienceForm';
 
 const FormSection = () => {
 
-  const { resumeInfo, setResumeInfo } = useResumeInfo();
+  const { resumeInfo, setResumeInfo, createResume, updateResume } = useResumeInfo();
   const [activeFormIndex, setActiveFormIndex] = useState(1);
 
   const [isDisabled, setIsDisabled] = useState(false); // State to manage button disable
@@ -30,7 +30,7 @@ const FormSection = () => {
           }
           <Button className="flex gap-2" size="sm"
           onClick={() => setActiveFormIndex(activeFormIndex + 1)}
-          disabled={!isDisabled} // Use disabled prop directly
+          // disabled={!isDisabled} // Use disabled prop directly
           >
             Next
             <ArrowRight />
@@ -40,16 +40,27 @@ const FormSection = () => {
       {/* Personal Detail */}
       {
         activeFormIndex == 1 &&
-        <PersonalDetail resumeInfo={resumeInfo} setResumeInfo={setResumeInfo} setIsDisabled={setIsDisabled}/>
-      }
+        <PersonalDetail 
+        resumeInfo={resumeInfo} 
+        setResumeInfo={setResumeInfo} 
+        setIsDisabled={setIsDisabled}
+        createResume={createResume}
         
-      {/* Summary */}
+        />
+      }
+
+       {/* Experience */}
 
       {
         activeFormIndex == 2 &&
-        <ExperienceForm resumeInfo={resumeInfo} setResumeInfo={setResumeInfo} setIsDisabled={setIsDisabled}/>
+        <ExperienceForm 
+        resumeInfo={resumeInfo} 
+        setResumeInfo={setResumeInfo} 
+        setIsDisabled={setIsDisabled}
+        updateResume={updateResume}
+
+        />
       }
-      {/* Experience */}
 
       {/* Education */}
 
