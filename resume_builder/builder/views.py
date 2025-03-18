@@ -26,3 +26,14 @@ class ResumeListAPIView(generics.ListAPIView):
     def get_queryset(self):
         # Return resumes belonging to the authenticated user
         return Resume.objects.filter(user=self.request.user)
+
+class ResumeRetrieveAPIView(generics.RetrieveAPIView):
+    serializer_class = ResumeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Resume.objects.filter(user=self.request.user)
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        return generics.get_object_or_404(queryset, pk=self.kwargs['pk'])
