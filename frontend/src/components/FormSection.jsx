@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, LayoutGrid } from 'lucide-react';
 import PersonalDetail from './forms/PersonalDetail';
 import { useResumeInfo } from '../ResumeInfoContext';
 import ExperienceForm from './forms/ExperienceForm';
+import EducationForm from './forms/EducationForm';
 
 const FormSection = () => {
 
@@ -63,6 +64,17 @@ const FormSection = () => {
       }
 
       {/* Education */}
+
+      {
+        activeFormIndex == 3 &&
+        <EducationForm 
+        resumeInfo={resumeInfo} 
+        setResumeInfo={setResumeInfo} 
+        setIsDisabled={setIsDisabled}
+        updateResume={updateResume}
+        
+        />
+      }
 
       {/* Skills */}
 

@@ -1,6 +1,5 @@
 import PersonalDetailsPreview  from './preview/PersonalDetailsPreview';
 import { useResumeInfo } from '../ResumeInfoContext';
-import SummaryPreview from './preview/SummaryPreview';
 import ExperiencePreview from './preview/ExperiencePreview';
 import EducationPreview from './preview/EducationPreview';
 import SkillsPreview from './preview/SkillsPreview';
@@ -15,8 +14,6 @@ const ResumePreview = () => {
     }} >
         {/* Personal Detail */}
             <PersonalDetailsPreview   resumeInfo={resumeInfo}/>
-        {/* Summary */}
-            <SummaryPreview resumeInfo={resumeInfo}/>
         {/* Experience */}
             <ExperiencePreview resumeInfo={resumeInfo}/>
         {/* Education */}

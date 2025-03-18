@@ -54,6 +54,11 @@ export const ResumeInfoProvider = ({ children }) => {
         setResumeInfo(data);
     };
 
+
+    useEffect(() =>{
+
+    },[resumeInfo])
+
     return (
         <ResumeInfoContext.Provider value={{ resumeInfo, setResumeInfo, createResume, updateResume }}>
             {children}
