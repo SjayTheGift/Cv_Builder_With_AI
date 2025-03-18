@@ -47,12 +47,9 @@ const EducationForm = ({ resumeInfo, setResumeInfo, updateResume }) => {
           educations: educations
       };
 
-
-      console.log(resume)
-
       try {
           await updateResume(resume);
-          toast.success("Resume updated successfully!");
+          toast.success("Resume updated education!");
       } catch (error) {
           console.error("Failed to update resume:", error.message);
           toast.error("Failed to update resume: " + error.message);

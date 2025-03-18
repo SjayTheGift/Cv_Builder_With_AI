@@ -80,22 +80,25 @@ class ResumeSerializer(serializers.ModelSerializer):
         instance.github = validated_data.get('github', instance.github)
         instance.linkedin = validated_data.get('linkedin', instance.linkedin)
         instance.summary = validated_data.get('summary', instance.summary)
-        instance.themeColor = validated_data.get('themeColor', instance.summary)
+        instance.themeColor = validated_data.get('themeColor', instance.themeColor)
         instance.save()
 
         # Update experiences
         instance.experiences.all().delete()  # Remove existing experiences
         for experience_data in experiences_data:
-            Experience.objects.create(resume=instance, **experience_data)
+            # Ensure resume is not included in experience_data
+            Experience.objects.create(resume=instance, **{k: v for k, v in experience_data.items() if k != 'resume'})
 
         # Update educations
         instance.educations.all().delete()  # Remove existing educations
         for education_data in educations_data:
-            Education.objects.create(resume=instance, **education_data)
+            # Ensure resume is not included in education_data
+            Education.objects.create(resume=instance, **{k: v for k, v in education_data.items() if k != 'resume'})
 
         # Update skills
         instance.skills.all().delete()  # Remove existing skills
         for skill_data in skills_data:
-            Skill.objects.create(resume=instance, **skill_data)
+            # Ensure resume is not included in skill_data
+            Skill.objects.create(resume=instance, **{k: v for k, v in skill_data.items() if k != 'resume'})
 
         return instance
