@@ -15,54 +15,66 @@ import { Textarea } from "@/components/ui/textarea"
 const PersonalDetail = ({ resumeInfo, setResumeInfo, setIsDisabled, createResume }) => {
 
 
-  const {
-    firstname,
-    lastname,
-    job_title,
-    address,
-    phone,
-    email,
-    website,
-    linkedin,
-    github,
-    summary
-} = resumeInfo
+//   const {
+//     firstname,
+//     lastname,
+//     job_title,
+//     address,
+//     phone,
+//     email,
+//     website,
+//     linkedin,
+//     github,
+//     summary
+// } = resumeInfo
 
-  const handleInputChange = (e) =>{
-    // setIsDisabled(false);
+//   const handleInputChange = (e) =>{
+//     // setIsDisabled(false);
+//     const { name, value } = e.target;
+
+//     setResumeInfo({
+//       ...resumeInfo,
+//       [name]:value
+//     })
+//   }
+
+//   const handleSave = async () =>{
+
+//     if(firstname.trim() !== '' &&  lastname.trim() !== '' && job_title.trim() !== '' 
+//     &&  address.trim() !== '' && phone.trim() !== '' &&  email.trim() !== '' && website.trim() !== '' 
+//     &&  linkedin.trim() !== '' && github.trim() !== '' && summary.trim() !== '' 
+//   ){
+//         let resume = {
+//           firstname,
+//           lastname,
+//           job_title,
+//           address,
+//           phone,
+//           email,
+//           website,
+//           linkedin,
+//           github,
+//           summary
+//         }
+        
+//         await createResume(resume)
+//     }
+//     // setIsDisabled(true);
+// }
+
+
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
-
     setResumeInfo({
       ...resumeInfo,
-      [name]:value
-    })
-  }
+      [name]: value,
+    });
+  };
 
-  const handleSubmit = async (e) =>{
-    e.preventDefault();
-
-    if(firstname.trim() !== '' &&  lastname.trim() !== '' && job_title.trim() !== '' 
-    &&  address.trim() !== '' && phone.trim() !== '' &&  email.trim() !== '' && website.trim() !== '' 
-    &&  linkedin.trim() !== '' && github.trim() !== '' && summary.trim() !== '' 
-  ){
-        let resume = {
-          firstname,
-          lastname,
-          job_title,
-          address,
-          phone,
-          email,
-          website,
-          linkedin,
-          github,
-          summary
-        }
-        
-        await createResume(resume)
-    }
-    // setIsDisabled(true);
-
-}
+  const handleSave = async () => {
+    const resume = { ...resumeInfo };
+    await createResume(resume);
+  };
 
   return (
     <Card className="border-t-primary border-t-4">
@@ -74,7 +86,7 @@ const PersonalDetail = ({ resumeInfo, setResumeInfo, setIsDisabled, createResume
         </CardDescription>
       </CardHeader>
       <CardContent>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={(e) => e.preventDefault()}>
           <div className="grid grid-cols-2 gap-3">
             <div className="grid gap-2">
                 <Label htmlFor="first-name">First Name *</Label>
@@ -83,6 +95,7 @@ const PersonalDetail = ({ resumeInfo, setResumeInfo, setIsDisabled, createResume
                 type="text"
                 name="firstname"
                 required
+                value={resumeInfo.firstname}
                 onChange={handleInputChange}
                 />
             </div>
@@ -92,6 +105,7 @@ const PersonalDetail = ({ resumeInfo, setResumeInfo, setIsDisabled, createResume
                 id="last-name"
                 type="text"
                 name="lastname"
+                value={resumeInfo.lastname}
                 required
                 onChange={handleInputChange}
                 />
@@ -102,6 +116,7 @@ const PersonalDetail = ({ resumeInfo, setResumeInfo, setIsDisabled, createResume
                 id="job-title"
                 type="text"
                 name="job_title"
+                value={resumeInfo.job_title}
                 required
                 className="my-2"
                 onChange={handleInputChange}
@@ -113,6 +128,7 @@ const PersonalDetail = ({ resumeInfo, setResumeInfo, setIsDisabled, createResume
                 id="email"
                 type="email"
                 name="email"
+                value={resumeInfo.email}
                 required
                 onChange={handleInputChange}
                 />
@@ -123,6 +139,7 @@ const PersonalDetail = ({ resumeInfo, setResumeInfo, setIsDisabled, createResume
                 id="address"
                 type="text"
                 name="address"
+                value={resumeInfo.address}
                 required
                 className="my-2"
                 onChange={handleInputChange}
@@ -134,6 +151,7 @@ const PersonalDetail = ({ resumeInfo, setResumeInfo, setIsDisabled, createResume
                 id="Phone"
                 type="text"
                 name="phone"
+                value={resumeInfo.phone}
                 required
                 onChange={handleInputChange}
                 />
@@ -144,6 +162,7 @@ const PersonalDetail = ({ resumeInfo, setResumeInfo, setIsDisabled, createResume
                 id="website"
                 type="text"
                 name="website"
+                value={resumeInfo.website}
                 onChange={handleInputChange}
                 />
             </div>
@@ -153,7 +172,7 @@ const PersonalDetail = ({ resumeInfo, setResumeInfo, setIsDisabled, createResume
                 id="Phone"
                 type="text"
                 name="linkedin"
-                required
+                value={resumeInfo.linkedin}
                 onChange={handleInputChange}
                 />
             </div>
@@ -163,6 +182,7 @@ const PersonalDetail = ({ resumeInfo, setResumeInfo, setIsDisabled, createResume
                 id="github"
                 type="text"
                 name="github"
+                value={resumeInfo.github}
                 onChange={handleInputChange}
                 />
             </div>            
@@ -174,13 +194,14 @@ const PersonalDetail = ({ resumeInfo, setResumeInfo, setIsDisabled, createResume
               id='summary' 
               placeholder="Tell us a little bit about yourself."
               name="summary"
+              value={resumeInfo.summary}
               onChange={handleInputChange}
               style={{ resize: 'none', width: '100%', height: '8rem'}} // Adjust height here
               />
             </div>
           </div>
           <div className='flex justify-end'>
-            <Button type="submit" className="cursor-pointer mt-4">
+            <Button onClick={handleSave} type="button" className="cursor-pointer mt-4">
                 Save
             </Button>
           </div>

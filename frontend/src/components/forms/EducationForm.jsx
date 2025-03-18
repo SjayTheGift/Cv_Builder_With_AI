@@ -47,6 +47,8 @@ const EducationForm = ({ resumeInfo, setResumeInfo, updateResume }) => {
           educations: educations
       };
 
+      console.log(resume)
+
       try {
           await updateResume(resume);
           toast.success("Resume updated education!");

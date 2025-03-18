@@ -19,11 +19,24 @@ export const ResumeInfoProvider = ({ children }) => {
         github: "",
         themeColor: "",
         summary: "",
-        experiences: [],
-        educations: [],
-        skills: []
     });
     
+
+    const getSingleResume = async (id) => {
+        const response = await fetch(`${BASE_RESUME_URL}${id}/`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+        if (!response.ok) {
+            const data = await response.json();
+            throw new Error(data.message);
+        }
+        const data = await response.json();
+        setResumeInfo(data); // Update the resumeInfo with the fetched data
+    };
+
+
     const createResume = async (resume) => {
         const response = await fetch(`${BASE_RESUME_URL}create/`, {
             method: 'POST',
@@ -40,7 +53,7 @@ export const ResumeInfoProvider = ({ children }) => {
     };
 
     const updateResume = async (resumeInfo) => {
-        const response = await fetch(`${BASE_RESUME_URL}${resumeInfo.id}/`, {
+        const response = await fetch(`${BASE_RESUME_URL}update/${resumeInfo.id}/`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(resumeInfo),
@@ -55,12 +68,12 @@ export const ResumeInfoProvider = ({ children }) => {
     };
 
 
-    useEffect(() =>{
+    // useEffect(() =>{
 
-    },[resumeInfo])
+    // },[resumeInfo])
 
     return (
-        <ResumeInfoContext.Provider value={{ resumeInfo, setResumeInfo, createResume, updateResume }}>
+        <ResumeInfoContext.Provider value={{ resumeInfo, setResumeInfo, createResume, updateResume, getSingleResume }}>
             {children}
         </ResumeInfoContext.Provider>
     );

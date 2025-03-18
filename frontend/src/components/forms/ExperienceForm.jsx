@@ -15,12 +15,13 @@ import { toast } from 'react-toastify';
 const ExperienceForm = ({ resumeInfo, setResumeInfo, updateResume }) => {
   const [experiences, setExperiences] = useState([{ job_title: '', company: '', start_date: '', end_date: '', description: '' }]);
 
+
   useEffect(() => {
     setResumeInfo((prevResumeInfo) => ({
       ...prevResumeInfo,
-      experience: experiences,
+      experiences,
     }));
-  }, [experiences, setResumeInfo, resumeInfo.experiences]);
+  }, [experiences, setResumeInfo]);
 
   const handleInputChange = (index, e) => {
     const { name, value } = e.target;
@@ -39,28 +40,25 @@ const ExperienceForm = ({ resumeInfo, setResumeInfo, updateResume }) => {
     setExperiences(newExperiences);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Build the resume object to send
+  const handleSave = async () => {
     const resume = { 
-        ...resumeInfo, 
-        experiences: experiences.map(exp => ({
-            ...exp,
-            end_date: exp.end_date || null // Set to null if empty
-        }))
+      ...resumeInfo, 
+      experiences: experiences.map(exp => ({
+        ...exp,
+        end_date: exp.end_date || null // Set to null if empty
+      }))
     };
-    
-      try {
 
-        await updateResume(resume);
-        toast.success("Resume updated successfully!");
-      } 
-      catch (error) {
-          console.error("Failed to update resume:", error.message);
-          toast.error("Failed to update resume: " + error.message);
-      }
-  }
+    console.log(resume);
+
+    try {
+      await updateResume(resume);
+      toast.success("Resume updated successfully!");
+    } catch (error) {
+      console.error("Failed to update resume:", error.message);
+      toast.error("Failed to update resume: " + error.message);
+    }
+  };
 
   return (
     <Card className="border-t-primary border-t-4">
@@ -71,7 +69,7 @@ const ExperienceForm = ({ resumeInfo, setResumeInfo, updateResume }) => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={(e) => e.preventDefault()}>
           {experiences.map((experience, index) => (
             <div key={index} className="mb-4">
               <div className="grid grid-cols-2 gap-3">
@@ -143,7 +141,7 @@ const ExperienceForm = ({ resumeInfo, setResumeInfo, updateResume }) => {
             <Button type="button" onClick={handleAddExperience} className="cursor-pointer mt-4">
               Add More
             </Button>
-            <Button type="submit" className="cursor-pointer mt-4 ml-2">
+            <Button type="button" onClick={handleSave} className="cursor-pointer mt-4 ml-2">
               Save
             </Button>
           </div>

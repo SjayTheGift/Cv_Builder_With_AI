@@ -16,7 +16,7 @@ const ExperiencePreview = ({ resumeInfo }) => {
             borderColor: resumeInfo?.themeColor
         }}/>
 
-      {resumeInfo.experience && resumeInfo.experience.map((experience, index) => 
+      {resumeInfo.experiences && resumeInfo.experiences.map((experience, index) => 
         <Experiences key={index} experience={experience} />
       )}
     </div>
