@@ -39,20 +39,28 @@ const ExperienceForm = ({ resumeInfo, setResumeInfo, updateResume }) => {
     setExperiences(newExperiences);
   };
 
-  const handleSubmit = async (e) =>{
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-        // Build the resume object to send
-      const resume = { ...resumeInfo, experiences };
 
+    // Build the resume object to send
+    const resume = { 
+        ...resumeInfo, 
+        experiences: experiences.map(exp => ({
+            ...exp,
+            end_date: exp.end_date || null // Set to null if empty
+        }))
+    };
+    
       try {
+
         await updateResume(resume);
         toast.success("Resume updated successfully!");
-      } catch (error) {
-        console.error("Failed to update resume:", error.message);
-        toast.error("Failed to update resume: " + error.message);
+      } 
+      catch (error) {
+          console.error("Failed to update resume:", error.message);
+          toast.error("Failed to update resume: " + error.message);
       }
-    }
+  }
 
   return (
     <Card className="border-t-primary border-t-4">
